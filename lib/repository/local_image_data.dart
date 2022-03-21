@@ -21,26 +21,28 @@ class LocalImageData implements PicData {
     data.add(UnsplashModel.fakeData());
     data.add(UnsplashModel.fakeData());
 
-    var dir = await getApplicationDocumentsDirectory();
+    return data;
 
-    var dirp = Directory('${dir.path}/p/');
+    // var dir = await getApplicationDocumentsDirectory();
 
-    var isD = dirp.existsSync();
-    if (!isD) {
-      dirp.createSync();
-    }
-    var listDir = dirp.listSync();
+    // var dirp = Directory('${dir.path}/p/');
 
-    for (var f in listDir) {
-      if (f is File) {
-        String filename = basename(f.path);
-        var dataJson = prefs.getString(filename);
-        Map<String, dynamic> user = jsonDecode(dataJson!);
-        print(f.path);
-      }
-    }
+    // var isD = dirp.existsSync();
+    // if (!isD) {
+    //   dirp.createSync();
+    // }
+    // var listDir = dirp.listSync();
 
-    return Future.sync(() => data);
+    // for (var f in listDir) {
+    //   if (f is File) {
+    //     String filename = basename(f.path);
+    //     var dataJson = prefs.getString(filename);
+    //     Map<String, dynamic> user = jsonDecode(dataJson!);
+    //     print(f.path);
+    //   }
+    // }
+
+    // return Future.sync(() => data);
   }
 
   @override

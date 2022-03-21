@@ -18,32 +18,46 @@ class _ColumnItemImage extends State<ColumnItemImage> {
   List<UnsplashModel> _picList = [];
   final List<TwoItemImage> _twoItemImageList = [];
   final Map<String, UnsplashModel> _twoItemImageMap = {};
+
   int _itemCount = 0;
-  bool _more = false;
-  bool _isLoading = false;
+  int _page = 1;
+  int _nextPage = 2;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
-    loadData();
-
+    var _key = widget.key.toString();
+    _scrollController = ScrollController();
+    _scrollController.addListener(
+      () async {
+        if (_scrollController.offset >=
+                _scrollController.position.maxScrollExtent &&
+            !_scrollController.position.outOfRange) {
+          print('fin');
+          await _loadData2();
+        }
+      },
+    );
+    _loadData2();
     super.initState();
   }
 
-  void loadData() async {
-    _isLoading = true;
-    int page = (_picList.length % 10) + 1;
-    var value = await widget.picData.getPhotos(page: page);
-    setState(() {
-      _picList = value;
+  Future _loadData2() async {
+    while (_page < _nextPage) {
+      var e = await widget.picData.getPhotos(page: _page);
+      _picList.addAll(e);
       int v = _picList.length ~/ 2;
       int vp = _picList.length % 2;
       _itemCount = v + vp;
       _twoItemImageListBuild(_itemCount);
-      _isLoading = false;
-    });
+
+      _page++;
+    }
+    _nextPage++;
   }
 
   void _twoItemImageListBuild(int itemCount) {
+    _twoItemImageList.clear();
     for (int i = 0; i < itemCount; i++) {
       int _positionL = i * 2;
       int _positionR = _positionL + 1;
@@ -55,7 +69,8 @@ class _ColumnItemImage extends State<ColumnItemImage> {
         _twoItemImageMap.putIfAbsent(picRigh.id, () => picRigh!);
       }
 
-      TwoItemImage element = TwoItemImage(
+      final TwoItemImage element = TwoItemImage(
+          key: ValueKey(i),
           onTap: (id) {
             UnsplashModel? selectedImage = _twoItemImageMap[id];
             Navigator.push(
@@ -74,7 +89,7 @@ class _ColumnItemImage extends State<ColumnItemImage> {
       _twoItemImageList.add(element);
     }
 
-    _more = false;
+    setState(() {});
   }
 
   @override
@@ -100,15 +115,14 @@ class _ColumnItemImage extends State<ColumnItemImage> {
     return Container(
       color: Colors.black,
       child: ListView.builder(
-          itemCount: (_more) ? _itemCount + 1 : _itemCount,
+          controller: _scrollController,
+          itemCount: _itemCount,
           itemBuilder: (BuildContext context, int index) {
-            if (index >= _itemCount) {
-              if (!_isLoading) {
-                loadData();
-              }
-            }
-            print(index);
             return _twoItemImageList[index];
+            return Text(
+              index.toString(),
+              style: TextStyle(color: Colors.white, fontSize: 150),
+            );
           }),
     );
   }

@@ -55,7 +55,7 @@ class UnsplashModel {
                 large: '',
                 medium:
                     'https://images.unsplash.com/profile-1633011648572-1129ea717d2bimage?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=64&w=64')),
-        likes: 150);
+        likes: 55);
   }
 }
 

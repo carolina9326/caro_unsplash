@@ -56,17 +56,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final String _kFav = 'fav';
   bool _isHome = true;
   int _selectedIndex = 0;
-  late ColumnItemImage _home;
-  late ColumnItemImage _fav;
+  late final ColumnItemImage _home;
+  late final ColumnItemImage _fav;
+  late final UnsplasImageData _unsplasImageData;
+  late final LocalImageData _localImageData;
 
   @override
   void initState() {
-    _home = ColumnItemImage(
-      picData: UnsplasImageData(),
-    );
-    _fav = ColumnItemImage(
-      picData: LocalImageData(),
-    );
+    _unsplasImageData = UnsplasImageData();
+    _localImageData = LocalImageData();
+    _home = ColumnItemImage(key: Key(_kHome), picData: _unsplasImageData);
+    _fav = ColumnItemImage(key: Key(_kFav), picData: _localImageData);
     super.initState();
   }
 
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   flex: 13,
                   child: IndexedStack(
                     index: (_isHome) ? 0 : 1,
-                    children: [_home, _fav],
+                    children: [_home],
                   ))
             ],
           ),

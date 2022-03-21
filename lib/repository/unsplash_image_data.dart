@@ -23,8 +23,18 @@ class UnsplasImageData implements PicData {
   }
 
   @override
-  Future<List<UnsplashModel>> getPhotos({int page = 1}) async {
+  Future<List<UnsplashModel>> getPhotos({int page = 0}) async {
     List<UnsplashModel> data = [];
+    // page--;
+
+    // for (var i = 0; i < 32; i++) {
+    //   data.add(UnsplashModel.fakeData(idP: i));
+    // }
+
+    // int pageT = (page == 0) ? (page * 10) : (page * 10) + page;
+    // var da = data.skip(pageT).take(10).toList();
+
+    // return Future.sync(() => da);
 
     var response = await _dio.request(
       '/photos',
@@ -37,7 +47,7 @@ class UnsplasImageData implements PicData {
       data.add(x);
     }
 
-    return Future.sync(() => data);
+    return data;
   }
 
   Future<bool> downloadPhoto(UnsplashModel model) async {
