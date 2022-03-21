@@ -1,27 +1,48 @@
 import 'package:caro_unsplash/models/unsplash_model.dart';
 import 'package:caro_unsplash/ui/two_item_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import '../repository/pic_data.dart';
 
 class ColumnItemImage extends StatefulWidget {
-  const ColumnItemImage({Key? key}) : super(key: key);
+  final PicData picData;
+  const ColumnItemImage({Key? key, required this.picData}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ColumnItemImage();
 }
 
 class _ColumnItemImage extends State<ColumnItemImage> {
+  List<UnsplashModel> picList = [];
+  int _itemCount = 0;
+
+  @override
+  void initState() {
+    picList = widget.picData.getPhotos(1);
+    int v = picList.length ~/ 2;
+    int vp = picList.length % 2;
+    _itemCount = v + vp;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
       child: ListView.builder(
-          itemCount: 5,
+          itemCount: _itemCount,
           itemBuilder: (BuildContext context, int index) {
+            int _positionL = index * 2;
+            int _positionR = _positionL + 1;
+            var picLeft = picList[_positionL];
+            UnsplashModel? picRigh;
+            if (_positionR <= picList.length - 1) {
+              picRigh = picList[_positionR];
+            }
             return TwoItemImage(
                 height: MediaQuery.of(context).size.height * .4,
-                left: UnsplashModel.fakeData(),
-                rigt: UnsplashModel.fakeData());
+                left: picLeft,
+                rigt: picRigh);
           }),
     );
   }

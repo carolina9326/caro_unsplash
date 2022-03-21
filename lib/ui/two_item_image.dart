@@ -5,11 +5,11 @@ import 'item_image.dart';
 
 class TwoItemImage extends StatelessWidget {
   final UnsplashModel left;
-  final UnsplashModel rigt;
+  final UnsplashModel? rigt;
   final double height;
 
   const TwoItemImage(
-      {Key? key, required this.left, required this.rigt, required this.height})
+      {Key? key, required this.left, this.rigt, required this.height})
       : super(key: key);
 
   @override

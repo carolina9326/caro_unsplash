@@ -3,27 +3,28 @@ import 'package:caro_unsplash/models/unsplash_model.dart';
 import 'package:flutter/material.dart';
 
 class ItemImage extends StatelessWidget {
-  final UnsplashModel model;
+  final UnsplashModel? model;
   final bool isNetwork;
   final double height;
 
   const ItemImage(
-      {Key? key,
-      required this.model,
-      this.isNetwork = true,
-      required this.height})
+      {Key? key, this.model, this.isNetwork = true, required this.height})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (model is! UnsplashModel)
+      return SizedBox(
+        height: height,
+      );
     ImageProvider imageProvider;
     ImageProvider imageProviderProfile;
     if (isNetwork) {
-      imageProvider = NetworkImage(model.urls.full);
-      imageProviderProfile = NetworkImage(model.user.profileImage.medium);
+      imageProvider = NetworkImage(model!.urls.full);
+      imageProviderProfile = NetworkImage(model!.user.profileImage.medium);
     } else {
-      var file = File(model.urls.thumb);
-      var fileProfile = File(model.user.profileImage.medium);
+      var file = File(model!.urls.thumb);
+      var fileProfile = File(model!.user.profileImage.medium);
       imageProvider = FileImage(file);
       imageProviderProfile = FileImage(fileProfile);
     }
@@ -37,7 +38,7 @@ class ItemImage extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Text(
-                model.user.name,
+                model!.user.name,
                 style: const TextStyle(color: Colors.white),
               )),
           Expanded(flex: 7, child: Image(image: imageProvider)),
@@ -47,7 +48,7 @@ class ItemImage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Likes: ${model.likes}',
+                    'Likes: ${model!.likes}',
                     style: const TextStyle(color: Colors.white),
                   ),
                   ClipRRect(

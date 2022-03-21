@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'repository/local_image_data.dart';
+import 'repository/unsplash_image_data.dart';
 import 'ui/column_item_image.dart';
 
 void main() {
@@ -51,10 +53,31 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  late ColumnItemImage _home;
+  late ColumnItemImage _fav;
+  late ColumnItemImage _bodyImage;
+
+  @override
+  void initState() {
+    _home = ColumnItemImage(
+      key: const Key('home'),
+      picData: UnsplasImageData(),
+    );
+    _fav = ColumnItemImage(
+      key: const Key('fav'),
+      picData: LocalImageData(),
+    );
+    _bodyImage = _home;
+    super.initState();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index == 0)
+        _bodyImage = _home;
+      else
+        _bodyImage = _fav;
     });
   }
 
@@ -76,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       prefixIcon: Icon(Icons.search),
                     ),
                   )),
-              Expanded(flex: 13, child: ColumnItemImage())
+              Expanded(flex: 13, child: _bodyImage)
             ],
           ),
         ),
