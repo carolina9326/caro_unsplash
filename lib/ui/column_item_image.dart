@@ -18,15 +18,24 @@ class _ColumnItemImage extends State<ColumnItemImage> {
 
   @override
   void initState() {
-    picList = widget.picData.getPhotos(1);
-    int v = picList.length ~/ 2;
-    int vp = picList.length % 2;
-    _itemCount = v + vp;
+    widget.picData.getPhotos(page: 1).then((value) {
+      setState(() {
+        picList = value;
+        int v = picList.length ~/ 2;
+        int vp = picList.length % 2;
+        _itemCount = v + vp;
+      });
+    });
+    //picList = widget.picData.getPhotos(page: 1);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_itemCount == 0) {
+      return const Icon(Icons.no_photography);
+    }
     return Container(
       color: Colors.black,
       child: ListView.builder(

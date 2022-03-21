@@ -3,7 +3,7 @@ import 'package:caro_unsplash/repository/pic_data.dart';
 
 class LocalImageData implements PicData {
   @override
-  List<UnsplashModel> getPhotos(int page) {
+  Future<List<UnsplashModel>> getPhotos({int page = 0}) {
     List<UnsplashModel> data = [];
 
     data.add(UnsplashModel.fakeData());
@@ -14,6 +14,6 @@ class LocalImageData implements PicData {
     data.add(UnsplashModel.fakeData());
     data.add(UnsplashModel.fakeData());
 
-    return data;
+    return Future.sync(() => data);
   }
 }

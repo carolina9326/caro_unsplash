@@ -10,6 +10,16 @@ class UnsplashModel {
       required this.user,
       required this.likes});
 
+  factory UnsplashModel.fromJson(Map<String, dynamic> json) {
+    final String _id = json['id'];
+    final _urls = json['urls'] ?? '';
+    final __urls = Urls.fromJson(_urls);
+    final _user = json['user'] ?? '';
+    final __user = User.fromJson(_user);
+    final int _likes = json['likes'] ?? 0;
+    return UnsplashModel(id: _id, urls: __urls, user: __user, likes: _likes);
+  }
+
   factory UnsplashModel.fakeData() {
     return const UnsplashModel(
         id: '123456',
@@ -61,6 +71,26 @@ class Urls {
       required this.thumb,
       required this.large,
       required this.medium});
+
+  factory Urls.fromJson(Map<String, dynamic> json) {
+    final _raw = json['raws'] ?? '';
+    final _full = json['full'] ?? '';
+    final _regular = json['regular'] ?? '';
+    final _small = json['small'] ?? '';
+    final _smallS3 = json['small_s3'] ?? '';
+    final _thumb = json['thumb'] ?? '';
+    final _large = json['large'] ?? '';
+    final _medium = json['medium'] ?? '';
+    return Urls(
+        raw: _raw,
+        full: _full,
+        regular: _regular,
+        small: _small,
+        smallS3: _smallS3,
+        thumb: _thumb,
+        large: _large,
+        medium: _medium);
+  }
 }
 
 class User {
@@ -78,4 +108,19 @@ class User {
       required this.lastName,
       required this.userName,
       required this.profileImage});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    final _id = json['id'] ?? '';
+    final _firstName = json['first_name'] ?? '';
+    final _lastName = json['last_name'] ?? '';
+    final _userName = json['username'] ?? '';
+    final _profileImage = json['profile_image'] ?? '';
+    final __profileImage = Urls.fromJson(_profileImage);
+    return User(
+        id: _id,
+        firstName: _firstName,
+        lastName: _lastName,
+        userName: _userName,
+        profileImage: __profileImage);
+  }
 }
