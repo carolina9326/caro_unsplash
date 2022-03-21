@@ -14,24 +14,22 @@ class TwoItemImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(children: [
-        Expanded(
-            flex: 1,
-            child: ItemImage(
-              model: left,
-              height: height,
-            )),
-        SizedBox(
-          width: 10,
-        ),
-        Expanded(
-            flex: 1,
-            child: ItemImage(
-              model: rigt,
-              height: height,
-            ))
-      ]),
-    );
+    return Row(children: [
+      Expanded(
+          flex: 1,
+          child: ItemImage(
+            model: left,
+            height: height,
+          )),
+      const SizedBox(
+        width: 10,
+      ),
+      Expanded(
+          flex: 1,
+          child: ItemImage(
+            model: rigt,
+            height: height,
+          ))
+    ]);
   }
 }

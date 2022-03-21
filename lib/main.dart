@@ -52,32 +52,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final String _kHome = 'home';
+  final String _kFav = 'fav';
+  bool _isHome = true;
   int _selectedIndex = 0;
   late ColumnItemImage _home;
   late ColumnItemImage _fav;
-  late ColumnItemImage _bodyImage;
 
   @override
   void initState() {
     _home = ColumnItemImage(
-      key: const Key('home'),
       picData: UnsplasImageData(),
     );
     _fav = ColumnItemImage(
-      key: const Key('fav'),
       picData: LocalImageData(),
     );
-    _bodyImage = _home;
     super.initState();
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index == 0)
-        _bodyImage = _home;
-      else
-        _bodyImage = _fav;
+      if (index == 0) {
+        _isHome = true;
+      } else {
+        _isHome = false;
+      }
     });
   }
 
@@ -87,19 +87,24 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Expanded(
+              const Expanded(
                   flex: 1,
                   child: TextField(
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
                     ),
                   )),
-              Expanded(flex: 13, child: _bodyImage)
+              Expanded(
+                  flex: 13,
+                  child: IndexedStack(
+                    index: (_isHome) ? 0 : 1,
+                    children: [_home, _fav],
+                  ))
             ],
           ),
         ),

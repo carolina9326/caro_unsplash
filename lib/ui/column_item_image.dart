@@ -1,4 +1,5 @@
 import 'package:caro_unsplash/models/unsplash_model.dart';
+import 'package:caro_unsplash/repository/local_image_data.dart';
 import 'package:caro_unsplash/ui/two_item_image.dart';
 import 'package:flutter/material.dart';
 
@@ -13,17 +14,19 @@ class ColumnItemImage extends StatefulWidget {
 }
 
 class _ColumnItemImage extends State<ColumnItemImage> {
-  List<UnsplashModel> picList = [];
+  List<UnsplashModel> _picList = [];
+  final List<TwoItemImage> _twoItemImageList = [];
   int _itemCount = 0;
 
   @override
   void initState() {
     widget.picData.getPhotos(page: 1).then((value) {
       setState(() {
-        picList = value;
-        int v = picList.length ~/ 2;
-        int vp = picList.length % 2;
+        _picList = value;
+        int v = _picList.length ~/ 2;
+        int vp = _picList.length % 2;
         _itemCount = v + vp;
+        _twoItemImageListBuild(_itemCount);
       });
     });
     //picList = widget.picData.getPhotos(page: 1);
@@ -31,27 +34,51 @@ class _ColumnItemImage extends State<ColumnItemImage> {
     super.initState();
   }
 
+  void _twoItemImageListBuild(int itemCount) {
+    for (int i = 0; i < itemCount; i++) {
+      int _positionL = i * 2;
+      int _positionR = _positionL + 1;
+      UnsplashModel picLeft = _picList[_positionL];
+      UnsplashModel? picRigh;
+      if (_positionR <= _picList.length - 1) {
+        picRigh = _picList[_positionR];
+      }
+
+      TwoItemImage element = TwoItemImage(
+          height: MediaQuery.of(context).size.height * .4,
+          left: picLeft,
+          rigt: picRigh);
+
+      _twoItemImageList.add(element);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_itemCount == 0) {
-      return const Icon(Icons.no_photography);
+      var width = MediaQuery.of(context).size.width * .4;
+      var icon = Icon(
+        Icons.no_photography,
+        size: width,
+      );
+      if (widget.picData is LocalImageData) {
+        return Center(
+          child: Icon(
+            Icons.favorite,
+            size: width,
+          ),
+        );
+      }
+      return Center(
+        child: icon,
+      );
     }
     return Container(
       color: Colors.black,
       child: ListView.builder(
           itemCount: _itemCount,
           itemBuilder: (BuildContext context, int index) {
-            int _positionL = index * 2;
-            int _positionR = _positionL + 1;
-            var picLeft = picList[_positionL];
-            UnsplashModel? picRigh;
-            if (_positionR <= picList.length - 1) {
-              picRigh = picList[_positionR];
-            }
-            return TwoItemImage(
-                height: MediaQuery.of(context).size.height * .4,
-                left: picLeft,
-                rigt: picRigh);
+            return _twoItemImageList[index];
           }),
     );
   }

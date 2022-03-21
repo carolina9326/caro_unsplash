@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caro_unsplash/models/unsplash_model.dart';
 import 'package:flutter/material.dart';
 
@@ -13,15 +14,26 @@ class ItemImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (model is! UnsplashModel)
+    if (model is! UnsplashModel) {
       return SizedBox(
         height: height,
       );
-    ImageProvider imageProvider;
-    ImageProvider imageProviderProfile;
+    }
+    late ImageProvider imageProvider;
+    late ImageProvider imageProviderProfile;
+    late CachedNetworkImage imageNetwork;
+    late CachedNetworkImage imageNetworkProfile;
     if (isNetwork) {
-      imageProvider = NetworkImage(model!.urls.full);
-      imageProviderProfile = NetworkImage(model!.user.profileImage.medium);
+      imageNetwork = CachedNetworkImage(
+        imageUrl: model!.urls.full,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      );
+      imageNetworkProfile = CachedNetworkImage(
+        imageUrl: model!.user.profileImage.medium,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      );
     } else {
       var file = File(model!.urls.thumb);
       var fileProfile = File(model!.user.profileImage.medium);
@@ -29,7 +41,7 @@ class ItemImage extends StatelessWidget {
       imageProviderProfile = FileImage(fileProfile);
     }
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       color: Colors.black,
       height: height,
       child: Column(
@@ -41,7 +53,9 @@ class ItemImage extends StatelessWidget {
                 model!.user.name,
                 style: const TextStyle(color: Colors.white),
               )),
-          Expanded(flex: 7, child: Image(image: imageProvider)),
+          Expanded(
+              flex: 7,
+              child: (isNetwork) ? imageNetwork : Image(image: imageProvider)),
           Expanded(
               flex: 2,
               child: Row(
@@ -52,9 +66,10 @@ class ItemImage extends StatelessWidget {
                     style: const TextStyle(color: Colors.white),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image(image: imageProviderProfile),
-                  )
+                      borderRadius: BorderRadius.circular(20),
+                      child: (isNetwork)
+                          ? imageNetworkProfile
+                          : Image(image: imageProviderProfile))
                 ],
               ))
         ],
