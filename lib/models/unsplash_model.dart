@@ -20,6 +20,13 @@ class UnsplashModel {
     return UnsplashModel(id: _id, urls: __urls, user: __user, likes: _likes);
   }
 
+  Map toJson() => {
+        'id': id,
+        'urls': urls.toJson(),
+        'user': user.toJson(),
+        'likes': likes,
+      };
+
   factory UnsplashModel.fakeData() {
     return const UnsplashModel(
         id: '123456',
@@ -91,6 +98,17 @@ class Urls {
         large: _large,
         medium: _medium);
   }
+
+  Map toJson() => {
+        'raw': raw,
+        'full': full,
+        'regular': regular,
+        'small': small,
+        'smallS3': smallS3,
+        'thumb': thumb,
+        'large': large,
+        'medium': medium
+      };
 }
 
 class User {
@@ -123,4 +141,12 @@ class User {
         userName: _userName,
         profileImage: __profileImage);
   }
+
+  Map toJson() => {
+        'id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'userName': userName,
+        'profileImage': profileImage.toJson()
+      };
 }

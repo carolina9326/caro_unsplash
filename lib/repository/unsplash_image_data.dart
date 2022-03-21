@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:caro_unsplash/models/constans.dart';
 import 'package:caro_unsplash/models/unsplash_model.dart';
 import 'package:caro_unsplash/repository/pic_data.dart';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UnsplasImageData implements PicData {
   late Dio _dio;
@@ -9,8 +13,8 @@ class UnsplasImageData implements PicData {
   UnsplasImageData() {
     var options = BaseOptions(
       baseUrl: Constans.unsplashApiServer,
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      connectTimeout: 30000,
+      receiveTimeout: 30000,
     );
     _headers = {};
     _headers.putIfAbsent('Authorization', () => Constans.unsplashAccesKey);
@@ -34,5 +38,22 @@ class UnsplasImageData implements PicData {
     }
 
     return Future.sync(() => data);
+  }
+
+  Future<bool> downloadPhoto(UnsplashModel model) async {
+    final prefs = await SharedPreferences.getInstance();
+    var dir = await getApplicationDocumentsDirectory();
+
+    var response = await _dio.download(
+        model.urls.full, '${dir.path}/p/${model.id}',
+        onReceiveProgress: (rec, total) {});
+
+    String jsonModel = jsonEncode(model);
+
+    var result1 = await prefs.setString(model.id, jsonModel);
+
+    var result2 = await prefs.setBool('f${model.id}', true);
+
+    return true;
   }
 }
