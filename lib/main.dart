@@ -1,5 +1,6 @@
 import 'package:caro_unsplash/models/unsplash_model.dart';
 import 'package:caro_unsplash/ui/item_image.dart';
+import 'package:caro_unsplash/ui/two_item_image.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -72,20 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 prefixIcon: Icon(Icons.search),
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 5,
-                    child: Container(
-                      child: ItemImage(model: UnsplashModel.fakeData()),
-                    )),
-                Expanded(
-                    flex: 5,
-                    child: Container(
-                      child: ItemImage(model: UnsplashModel.fakeData()),
-                    ))
-              ],
-            )
+            TwoItemImage(
+                left: UnsplashModel.fakeData(), rigt: UnsplashModel.fakeData())
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

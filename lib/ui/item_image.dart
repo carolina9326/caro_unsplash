@@ -33,7 +33,7 @@ class ItemImage extends StatelessWidget {
         children: [
           Text(
             model.user.name,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
           Image(image: imageProvider),
           Row(
@@ -41,7 +41,7 @@ class ItemImage extends StatelessWidget {
             children: [
               Text(
                 'Likes: ${model.likes}',
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
