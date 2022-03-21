@@ -1,7 +1,6 @@
-import 'package:caro_unsplash/models/unsplash_model.dart';
-import 'package:caro_unsplash/ui/item_image.dart';
-import 'package:caro_unsplash/ui/two_item_image.dart';
 import 'package:flutter/material.dart';
+
+import 'ui/column_item_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -65,17 +64,21 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
-            TwoItemImage(
-                left: UnsplashModel.fakeData(), rigt: UnsplashModel.fakeData())
-          ],
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                  flex: 1,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  )),
+              Expanded(flex: 13, child: ColumnItemImage())
+            ],
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class ItemImage extends StatelessWidget {
   final UnsplashModel model;
   final bool isNetwork;
+  final double height;
 
-  const ItemImage({
-    Key? key,
-    required this.model,
-    this.isNetwork = true,
-  }) : super(key: key);
+  const ItemImage(
+      {Key? key,
+      required this.model,
+      this.isNetwork = true,
+      required this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +28,34 @@ class ItemImage extends StatelessWidget {
       imageProviderProfile = FileImage(fileProfile);
     }
     return Container(
-      color: const Color(0xFF4EA5D9),
-      margin: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
+      color: Colors.black,
+      height: height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            model.user.name,
-            style: const TextStyle(color: Colors.white),
-          ),
-          Image(image: imageProvider),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Likes: ${model.likes}',
+          Expanded(
+              flex: 1,
+              child: Text(
+                model.user.name,
                 style: const TextStyle(color: Colors.white),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image(image: imageProviderProfile),
-              )
-            ],
-          )
+              )),
+          Expanded(flex: 7, child: Image(image: imageProvider)),
+          Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Likes: ${model.likes}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image(image: imageProviderProfile),
+                  )
+                ],
+              ))
         ],
       ),
     );
