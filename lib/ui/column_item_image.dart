@@ -16,6 +16,7 @@ class ColumnItemImage extends StatefulWidget {
 class _ColumnItemImage extends State<ColumnItemImage> {
   List<UnsplashModel> _picList = [];
   final List<TwoItemImage> _twoItemImageList = [];
+  final Map<String, UnsplashModel> _twoItemImageMap = {};
   int _itemCount = 0;
 
   @override
@@ -39,12 +40,18 @@ class _ColumnItemImage extends State<ColumnItemImage> {
       int _positionL = i * 2;
       int _positionR = _positionL + 1;
       UnsplashModel picLeft = _picList[_positionL];
+      _twoItemImageMap.putIfAbsent(picLeft.id, () => picLeft);
       UnsplashModel? picRigh;
       if (_positionR <= _picList.length - 1) {
         picRigh = _picList[_positionR];
+        _twoItemImageMap.putIfAbsent(picRigh.id, () => picRigh!);
       }
 
       TwoItemImage element = TwoItemImage(
+          onTap: (id) {
+            var selectedImage = _twoItemImageMap[id];
+            print(selectedImage!.user.userName);
+          },
           height: MediaQuery.of(context).size.height * .4,
           left: picLeft,
           rigt: picRigh);

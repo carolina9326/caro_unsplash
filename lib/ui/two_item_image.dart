@@ -7,9 +7,14 @@ class TwoItemImage extends StatelessWidget {
   final UnsplashModel left;
   final UnsplashModel? rigt;
   final double height;
+  final Function(String id) onTap;
 
   const TwoItemImage(
-      {Key? key, required this.left, this.rigt, required this.height})
+      {Key? key,
+      required this.left,
+      this.rigt,
+      required this.height,
+      required this.onTap})
       : super(key: key);
 
   @override
@@ -18,6 +23,7 @@ class TwoItemImage extends StatelessWidget {
       Expanded(
           flex: 1,
           child: ItemImage(
+            onTap: onTap,
             model: left,
             height: height,
           )),
@@ -27,6 +33,7 @@ class TwoItemImage extends StatelessWidget {
       Expanded(
           flex: 1,
           child: ItemImage(
+            onTap: onTap,
             model: rigt,
             height: height,
           ))

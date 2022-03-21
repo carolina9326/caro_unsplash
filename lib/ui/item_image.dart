@@ -7,9 +7,14 @@ class ItemImage extends StatelessWidget {
   final UnsplashModel? model;
   final bool isNetwork;
   final double height;
+  final Function(String id) onTap;
 
   const ItemImage(
-      {Key? key, this.model, this.isNetwork = true, required this.height})
+      {Key? key,
+      this.model,
+      this.isNetwork = true,
+      required this.height,
+      required this.onTap})
       : super(key: key);
 
   @override
@@ -40,39 +45,43 @@ class ItemImage extends StatelessWidget {
       imageProvider = FileImage(file);
       imageProviderProfile = FileImage(fileProfile);
     }
-    return Container(
-      padding: const EdgeInsets.all(15),
-      color: Colors.black,
-      height: height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-              flex: 1,
-              child: Text(
-                model!.user.name,
-                style: const TextStyle(color: Colors.white),
-              )),
-          Expanded(
-              flex: 7,
-              child: (isNetwork) ? imageNetwork : Image(image: imageProvider)),
-          Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Likes: ${model!.likes}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: (isNetwork)
-                          ? imageNetworkProfile
-                          : Image(image: imageProviderProfile))
-                ],
-              ))
-        ],
+    return GestureDetector(
+      onTap: () => onTap(model!.id),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        color: Colors.black,
+        height: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 1,
+                child: Text(
+                  model!.user.name,
+                  style: const TextStyle(color: Colors.white),
+                )),
+            Expanded(
+                flex: 7,
+                child:
+                    (isNetwork) ? imageNetwork : Image(image: imageProvider)),
+            Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Likes: ${model!.likes}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: (isNetwork)
+                            ? imageNetworkProfile
+                            : Image(image: imageProviderProfile))
+                  ],
+                ))
+          ],
+        ),
       ),
     );
   }
