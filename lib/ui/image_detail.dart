@@ -11,11 +11,13 @@ class ImageDetail extends StatefulWidget {
   final UnsplashModel model;
   final bool isNetwork;
   final PicData picData;
+  final FavoritesNotifierModel favoritesNotifierModel;
   const ImageDetail(
       {Key? key,
       required this.model,
       this.isNetwork = true,
-      required this.picData})
+      required this.picData,
+      required this.favoritesNotifierModel})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => _ImageDetail();
@@ -33,8 +35,7 @@ class _ImageDetail extends State<ImageDetail> {
     SharedPreferences.getInstance().then((value) {
       setState(() {
         _isFavorite = value.getBool('f${widget.model.id}') ?? false;
-        _favIcon =
-            (_isFavorite!) ? Icons.favorite : Icons.favorite_border_outlined;
+        _favIcon = (_isFavorite!) ? Icons.favorite : Icons.featured_video;
       });
     });
     super.initState();
@@ -44,10 +45,11 @@ class _ImageDetail extends State<ImageDetail> {
     if (!_isFavorite!) {
       _favIcon = Icons.favorite;
       _isFavorite = true;
+      widget.favoritesNotifierModel.addFavorite(_isFavorite!);
       var isSave = await widget.picData.downloadPhoto(widget.model);
       print(isSave);
     } else {
-      _favIcon = Icons.favorite_border_outlined;
+      _favIcon = Icons.favorite_sharp;
       _isFavorite = false;
     }
   }
@@ -55,17 +57,23 @@ class _ImageDetail extends State<ImageDetail> {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = const TextStyle(color: Colors.white);
+    late ImageProvider imageProvider;
     late CachedNetworkImage imageNetworkProfile;
-    late ImageProvider imageProviderProfile;
+    late CachedNetworkImage imageNetwork;
+    imageNetworkProfile = CachedNetworkImage(
+      imageUrl: widget.model.user.profileImage.medium,
+      placeholder: (context, url) => const CircularProgressIndicator(),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
+    );
     if (widget.isNetwork) {
-      imageNetworkProfile = CachedNetworkImage(
-        imageUrl: widget.model.user.profileImage.medium,
+      imageNetwork = CachedNetworkImage(
+        imageUrl: widget.model.urls.full,
         placeholder: (context, url) => const CircularProgressIndicator(),
         errorWidget: (context, url, error) => const Icon(Icons.error),
       );
     } else {
-      var fileProfile = File(widget.model.user.profileImage.medium);
-      imageProviderProfile = FileImage(fileProfile);
+      var file = File(widget.model.urls.full);
+      imageProvider = FileImage(file);
     }
 
     return Scaffold(
@@ -78,23 +86,18 @@ class _ImageDetail extends State<ImageDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CachedNetworkImage(
-              height: MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).size.width,
-              imageUrl: widget.model.urls.full,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: (widget.isNetwork)
+                  ? imageNetwork
+                  : Image(image: imageProvider),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: (widget.isNetwork)
-                      ? imageNetworkProfile
-                      : Image(
-                          image: imageProviderProfile,
-                        ),
+                  child: imageNetworkProfile,
                 ),
                 Text(
                   'Autor: ${widget.model.user.name}',
@@ -110,13 +113,13 @@ class _ImageDetail extends State<ImageDetail> {
                 ),
               ],
             ),
-            IconButton(
+            TextButton(
                 onPressed: () {
                   setState(() {
                     _putFavorite();
                   });
                 },
-                icon: Icon(
+                child: Icon(
                   _favIcon,
                   color: Colors.white,
                   size: 80,

@@ -7,6 +7,7 @@ class TwoItemImage extends StatelessWidget {
   final UnsplashModel left;
   final UnsplashModel? rigt;
   final double height;
+  final bool isNetwork;
   final Function(String id) onTap;
 
   const TwoItemImage(
@@ -14,7 +15,8 @@ class TwoItemImage extends StatelessWidget {
       required this.left,
       this.rigt,
       required this.height,
-      required this.onTap})
+      required this.onTap,
+      required this.isNetwork})
       : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class TwoItemImage extends StatelessWidget {
       Expanded(
           flex: 1,
           child: ItemImage(
+            isNetwork: isNetwork,
             onTap: onTap,
             model: left,
             height: height,
@@ -33,6 +36,7 @@ class TwoItemImage extends StatelessWidget {
       Expanded(
           flex: 1,
           child: ItemImage(
+            isNetwork: isNetwork,
             onTap: onTap,
             model: rigt,
             height: height,

@@ -22,11 +22,28 @@ class _ColumnItemImage extends State<ColumnItemImage> {
   int _itemCount = 0;
   int _page = 1;
   int _nextPage = 2;
+  bool _isNetwork = true;
   late ScrollController _scrollController;
+  late final _key;
 
   @override
   void initState() {
-    var _key = widget.key.toString();
+    _key = widget.key as ValueKey;
+    if (_key.value == 'home') {
+      print(_isNetwork);
+    }
+    if (_key.value == 'fav') {
+      _isNetwork = false;
+    }
+    widget.picData.favorites.addListener(() {
+      if (widget.picData.favorites.isAdded) {
+        //_loadData2();
+        if (!_isNetwork) {
+          _loadData2();
+        }
+      }
+      //_loadData2();
+    });
     _scrollController = ScrollController();
     _scrollController.addListener(
       () async {
@@ -43,6 +60,10 @@ class _ColumnItemImage extends State<ColumnItemImage> {
   }
 
   Future _loadData2() async {
+    if (_itemCount != 0) {
+      _nextPage = _itemCount + 1;
+      _page = _itemCount;
+    }
     while (_page < _nextPage) {
       var e = await widget.picData.getPhotos(page: _page);
       _picList.addAll(e);
@@ -70,6 +91,7 @@ class _ColumnItemImage extends State<ColumnItemImage> {
       }
 
       final TwoItemImage element = TwoItemImage(
+          isNetwork: _isNetwork,
           key: ValueKey(i),
           onTap: (id) {
             UnsplashModel? selectedImage = _twoItemImageMap[id];
@@ -77,6 +99,8 @@ class _ColumnItemImage extends State<ColumnItemImage> {
               context,
               MaterialPageRoute(
                   builder: (context) => ImageDetail(
+                        isNetwork: _isNetwork,
+                        favoritesNotifierModel: widget.picData.favorites,
                         picData: widget.picData,
                         model: selectedImage!,
                       )),
@@ -119,10 +143,6 @@ class _ColumnItemImage extends State<ColumnItemImage> {
           itemCount: _itemCount,
           itemBuilder: (BuildContext context, int index) {
             return _twoItemImageList[index];
-            return Text(
-              index.toString(),
-              style: TextStyle(color: Colors.white, fontSize: 150),
-            );
           }),
     );
   }

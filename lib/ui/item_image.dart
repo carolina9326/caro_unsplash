@@ -40,7 +40,7 @@ class ItemImage extends StatelessWidget {
         errorWidget: (context, url, error) => const Icon(Icons.error),
       );
     } else {
-      var file = File(model!.urls.thumb);
+      var file = File(model!.urls.full);
       var fileProfile = File(model!.user.profileImage.medium);
       imageProvider = FileImage(file);
       imageProviderProfile = FileImage(fileProfile);
@@ -72,12 +72,7 @@ class ItemImage extends StatelessWidget {
                     Text(
                       'Likes: ${model!.likes}',
                       style: const TextStyle(color: Colors.white),
-                    ),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: (isNetwork)
-                            ? imageNetworkProfile
-                            : Image(image: imageProviderProfile))
+                    )
                   ],
                 ))
           ],

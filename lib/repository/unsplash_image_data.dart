@@ -8,9 +8,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UnsplasImageData implements PicData {
+  @override
+  final FavoritesNotifierModel favorites;
   late Dio _dio;
   late Map<String, dynamic> _headers;
-  UnsplasImageData() {
+  UnsplasImageData({required this.favorites}) {
     var options = BaseOptions(
       baseUrl: Constans.unsplashApiServer,
       connectTimeout: 30000,
@@ -25,22 +27,17 @@ class UnsplasImageData implements PicData {
   @override
   Future<List<UnsplashModel>> getPhotos({int page = 0}) async {
     List<UnsplashModel> data = [];
-    // page--;
-
-    // for (var i = 0; i < 32; i++) {
-    //   data.add(UnsplashModel.fakeData(idP: i));
-    // }
-
-    // int pageT = (page == 0) ? (page * 10) : (page * 10) + page;
-    // var da = data.skip(pageT).take(10).toList();
-
-    // return Future.sync(() => da);
 
     var response = await _dio.request(
       '/photos',
       queryParameters: {'page': page},
       options: Options(method: 'GET', headers: _headers),
     );
+
+    //return data;
+    if (response.statusCode != 200) {
+      return data;
+    }
 
     for (var e in response.data) {
       final x = UnsplashModel.fromJson(e);

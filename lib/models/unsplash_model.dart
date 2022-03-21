@@ -1,3 +1,7 @@
+import 'dart:collection';
+
+import 'package:flutter/cupertino.dart';
+
 class UnsplashModel {
   final String id;
   final Urls urls;
@@ -104,7 +108,7 @@ class Urls {
         'full': full,
         'regular': regular,
         'small': small,
-        'smallS3': smallS3,
+        'small_s3': smallS3,
         'thumb': thumb,
         'large': large,
         'medium': medium
@@ -144,9 +148,20 @@ class User {
 
   Map toJson() => {
         'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'userName': userName,
-        'profileImage': profileImage.toJson()
+        'first_name': firstName,
+        'last_name': lastName,
+        'user_name': userName,
+        'profile_image': profileImage.toJson()
       };
+}
+
+class FavoritesNotifierModel extends ChangeNotifier {
+  bool _isAdd = false;
+
+  void addFavorite(bool value) {
+    _isAdd = value;
+    notifyListeners();
+  }
+
+  bool get isAdded => _isAdd;
 }

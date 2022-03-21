@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'models/unsplash_model.dart';
 import 'repository/local_image_data.dart';
 import 'repository/unsplash_image_data.dart';
 import 'ui/column_item_image.dart';
@@ -60,11 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
   late final ColumnItemImage _fav;
   late final UnsplasImageData _unsplasImageData;
   late final LocalImageData _localImageData;
+  late final FavoritesNotifierModel _favoritesData;
 
   @override
   void initState() {
-    _unsplasImageData = UnsplasImageData();
-    _localImageData = LocalImageData();
+    _favoritesData = FavoritesNotifierModel();
+    _unsplasImageData = UnsplasImageData(favorites: _favoritesData);
+    _localImageData = LocalImageData(favorites: _favoritesData);
     _home = ColumnItemImage(key: Key(_kHome), picData: _unsplasImageData);
     _fav = ColumnItemImage(key: Key(_kFav), picData: _localImageData);
     super.initState();
@@ -103,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   flex: 13,
                   child: IndexedStack(
                     index: (_isHome) ? 0 : 1,
-                    children: [_home],
+                    children: [_home, _fav],
                   ))
             ],
           ),
