@@ -18,15 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Caro Unsplash'),
@@ -62,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late final UnsplasImageData _unsplasImageData;
   late final LocalImageData _localImageData;
   late final FavoritesNotifierModel _favoritesData;
+  late final TextEditingController _textEditingController;
 
   @override
   void initState() {
@@ -70,6 +62,19 @@ class _MyHomePageState extends State<MyHomePage> {
     _localImageData = LocalImageData(favorites: _favoritesData);
     _home = ColumnItemImage(key: Key(_kHome), picData: _unsplasImageData);
     _fav = ColumnItemImage(key: Key(_kFav), picData: _localImageData);
+    _textEditingController = TextEditingController();
+    _textEditingController.addListener(() {
+      int length = _textEditingController.text.length;
+
+      if (length == 1) {
+        _favoritesData.addSearch(false);
+      }
+
+      if (length != 0 && (length % 4) == 0) {
+        _favoritesData.addTextToSearch(_textEditingController.text);
+        _favoritesData.addSearch(true);
+      }
+    });
     super.initState();
   }
 
@@ -88,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black,
           title: Text(widget.title),
         ),
         body: SizedBox(
@@ -95,10 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              const Expanded(
+              Expanded(
                   flex: 1,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _textEditingController,
+                    decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.search),
                     ),
                   )),
@@ -112,18 +119,32 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.black,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
+                icon: Icon(
+                  Icons.home_max_outlined,
+                  color: Colors.white,
+                ),
+                label: 'Home',
+                activeIcon: Icon(
+                  Icons.home,
+                  color: Colors.white,
+                )),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
+              icon: Icon(
+                Icons.favorite_outline_outlined,
+                color: Colors.white,
+              ),
+              activeIcon: Icon(
+                Icons.favorite,
+                color: Colors.white,
+              ),
               label: 'Favorites',
             )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          selectedItemColor: Colors.white,
           onTap: _onItemTapped,
         ));
   }

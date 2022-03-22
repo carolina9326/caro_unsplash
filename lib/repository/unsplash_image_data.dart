@@ -47,6 +47,30 @@ class UnsplasImageData implements PicData {
     return data;
   }
 
+  Future<List<UnsplashModel>> searchPhotos(String query) async {
+    List<UnsplashModel> data = [];
+
+    var response = await _dio.request(
+      '/search/photos',
+      queryParameters: {'page': 1, 'query': query},
+      options: Options(method: 'GET', headers: _headers),
+    );
+
+    //return data;
+    if (response.statusCode != 200) {
+      return data;
+    }
+
+    var results = response.data['results'];
+
+    for (var e in results) {
+      final x = UnsplashModel.fromJson(e);
+      data.add(x);
+    }
+
+    return data;
+  }
+
   Future<bool> downloadPhoto(UnsplashModel model) async {
     final prefs = await SharedPreferences.getInstance();
     var dir = await getApplicationDocumentsDirectory();

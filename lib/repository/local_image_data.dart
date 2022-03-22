@@ -15,10 +15,35 @@ class LocalImageData implements PicData {
 
   @override
   Future<List<UnsplashModel>> getPhotos({int page = 0}) async {
+    var data = await _loadData();
+
+    page--;
+
+    int pageT = (page == 0) ? (page * 2) : (page * 2) + 1;
+
+    final dataList = data.skip(pageT).take(10).toList();
+    return dataList;
+  }
+
+  @override
+  Future<bool> downloadPhoto(UnsplashModel model) {
+    // TODO: implement downloadPhoto
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<UnsplashModel>> searchPhotos(String query) async {
+    var data = await _loadData();
+
+    final dataList = data
+        .where((x) => x.user.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return dataList;
+  }
+
+  Future<List<UnsplashModel>> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
     List<UnsplashModel> data = [];
-
-    // return data;
 
     var dir = await getApplicationDocumentsDirectory();
 
@@ -45,17 +70,6 @@ class LocalImageData implements PicData {
       }
     }
 
-    page--;
-
-    int pageT = (page == 0) ? (page * 2) : (page * 2) + 1;
-
-    final dataList = data.skip(pageT).take(10).toList();
-    return dataList;
-  }
-
-  @override
-  Future<bool> downloadPhoto(UnsplashModel model) {
-    // TODO: implement downloadPhoto
-    throw UnimplementedError();
+    return data;
   }
 }

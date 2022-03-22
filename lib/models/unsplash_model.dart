@@ -157,11 +157,24 @@ class User {
 
 class FavoritesNotifierModel extends ChangeNotifier {
   bool _isAdd = false;
+  bool _isSearch = false;
+  String _textToSearch = '';
 
   void addFavorite(bool value) {
     _isAdd = value;
     notifyListeners();
   }
 
+  void addSearch(bool value) {
+    _isSearch = value;
+    notifyListeners();
+  }
+
+  void addTextToSearch(String value) {
+    _textToSearch = value;
+  }
+
   bool get isAdded => _isAdd;
+  bool get isSearch => _isSearch;
+  String get textToSearch => _textToSearch;
 }
