@@ -26,9 +26,31 @@ class LocalImageData implements PicData {
   }
 
   @override
-  Future<bool> downloadPhoto(UnsplashModel model) {
-    // TODO: implement downloadPhoto
-    throw UnimplementedError();
+  Future<bool> downloadPhoto(UnsplashModel model) async {
+    final prefs = await SharedPreferences.getInstance();
+    var dir = await getApplicationDocumentsDirectory();
+
+    var dirp = Directory('${dir.path}/p/');
+
+    var isD = dirp.existsSync();
+    if (!isD) {
+      dirp.createSync();
+    }
+    var listDir = dirp.listSync();
+
+    for (var f in listDir) {
+      if (f is File) {
+        String filename = basename(f.path);
+        if (filename == model.id) {
+          f.deleteSync();
+          prefs.remove(model.id);
+          prefs.remove('f$filename}');
+          return true;
+        }
+      }
+    }
+
+    return true;
   }
 
   @override

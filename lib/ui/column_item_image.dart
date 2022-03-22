@@ -36,11 +36,6 @@ class _ColumnItemImage extends State<ColumnItemImage> {
       _isNetwork = false;
     }
     widget.picData.favorites.addListener(() async {
-      if (widget.picData.favorites.isAdded) {
-        if (!_isNetwork) {
-          _loadData2();
-        }
-      }
       if (widget.picData.favorites.isSearch) {
         _picList.clear();
         String query = widget.picData.favorites.textToSearch;
@@ -50,11 +45,11 @@ class _ColumnItemImage extends State<ColumnItemImage> {
         int vp = _picList.length % 2;
         _itemCount = v + vp;
         _twoItemImageListBuild(_itemCount);
-      } else {
-        _itemCount = 1;
-        _picList.clear();
-        _loadData2();
+        return;
       }
+      _itemCount = 1;
+      _picList.clear();
+      _loadData2();
     });
     _scrollController = ScrollController();
     _scrollController.addListener(

@@ -24,18 +24,27 @@ class ImageDetail extends StatefulWidget {
 }
 
 class _ImageDetail extends State<ImageDetail> {
-  IconData? _favIcon;
+  late Icon _favIcon;
+  late Icon _NofavIcon;
   bool? _isFavorite;
 
   @override
   void initState() {
-    _favIcon = Icons.favorite_border_outlined;
+    _favIcon = const Icon(
+      Icons.favorite,
+      color: Colors.white,
+      size: 80,
+    );
+    _NofavIcon = const Icon(
+      Icons.favorite_outline_outlined,
+      color: Colors.white,
+      size: 80,
+    );
     _isFavorite = !widget.isNetwork;
 
     SharedPreferences.getInstance().then((value) {
       setState(() {
         _isFavorite = value.getBool('f${widget.model.id}') ?? false;
-        _favIcon = (_isFavorite!) ? Icons.favorite : Icons.featured_video;
       });
     });
     super.initState();
@@ -43,15 +52,12 @@ class _ImageDetail extends State<ImageDetail> {
 
   void _putFavorite() async {
     if (!_isFavorite!) {
-      _favIcon = Icons.favorite;
       _isFavorite = true;
-      widget.favoritesNotifierModel.addFavorite(_isFavorite!);
-      var isSave = await widget.picData.downloadPhoto(widget.model);
-      print(isSave);
     } else {
-      _favIcon = Icons.favorite_sharp;
       _isFavorite = false;
     }
+    var isSave = await widget.picData.downloadPhoto(widget.model);
+    widget.favoritesNotifierModel.addFavorite(_isFavorite!);
   }
 
   @override
@@ -119,11 +125,7 @@ class _ImageDetail extends State<ImageDetail> {
                     _putFavorite();
                   });
                 },
-                child: Icon(
-                  _favIcon,
-                  color: Colors.white,
-                  size: 80,
-                ))
+                child: (_isFavorite!) ? _favIcon : _NofavIcon)
           ],
         ),
       ),
