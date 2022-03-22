@@ -62,11 +62,14 @@ class _ColumnItemImage extends State<ColumnItemImage> {
         }
       },
     );
-    _loadData2();
+    () async {
+      await Future.delayed(Duration.zero);
+      await _loadData2();
+    }();
     super.initState();
   }
 
-  Future _loadData2() async {
+  Future<bool> _loadData2() async {
     if (_itemCount != 0) {
       _nextPage = _itemCount + 1;
       _page = _itemCount;
@@ -82,6 +85,8 @@ class _ColumnItemImage extends State<ColumnItemImage> {
       _page++;
     }
     _nextPage++;
+
+    return true;
   }
 
   void _twoItemImageListBuild(int itemCount) {
